@@ -111,9 +111,51 @@ void testSaveToFile()
     std::cout << "testSaveToFile passed!" << std::endl;
 }
 
+void testLoadFromFile() {
+    std::vector<Student> students;
+
+    // Load from file
+    FileManager::loadFromFile(students);
+
+    // Verify loaded data
+    assert(students.size() == 2);
+
+    const Student &student1 = students[0];
+    assert(student1.GetStudentID() == "103174539");
+    assert(student1.GetStudentName() == "Pham Tien Dat");
+    assert(student1.GetCurrentYear() == 1);
+    assert(student1.GetCurrentSemester() == 2);
+
+    auto semesters1 = student1.GetTotalSemesters();
+    assert(semesters1.size() == 1);
+    assert(semesters1[0].size() == 2);
+    assert(semesters1[0][0].GetCourseName() == "Technical Software Development");
+    assert(semesters1[0][0].GetItsGrades() == 85);
+    assert(semesters1[0][1].GetCourseName() == "Introduction to Artificial Intelligence");
+    assert(semesters1[0][1].GetItsGrades() == 70);
+
+    const Student &student2 = students[1];
+    assert(student2.GetStudentID() == "103171612");
+    assert(student2.GetStudentName() == "Tony Nguyen");
+    assert(student2.GetCurrentYear() == 1);
+    assert(student2.GetCurrentSemester() == 2);
+
+    auto semesters2 = student2.GetTotalSemesters();
+    assert(semesters2.size() == 2);
+    assert(semesters2[0].size() == 1);
+    assert(semesters2[0][0].GetCourseName() == "Technical Software Development");
+    assert(semesters2[0][0].GetItsGrades() == 85);
+    assert(semesters2[1].size() == 1);
+    assert(semesters2[1][0].GetCourseName() == "Introduction to Artificial Intelligence");
+    assert(semesters2[1][0].GetItsGrades() == 70);
+
+    std::cout << "testLoadFromFile passed!" << std::endl;
+}
+
 int main()
 {
     testSaveToFile();
+    testLoadFromFile();
     std::cout << "All tests passed!" << std::endl;
     return 0;
 }

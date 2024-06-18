@@ -7,9 +7,7 @@ Student::Student(const std::string &studentName, const std::string &studentID, i
     : itsStudentName(studentName), itsStudentID(studentID), itsCurrentYear(currentYear), itsCurrentSemester(currentSemester)
 {
     int totalSemesters = (currentYear - 1) * 2 + (currentSemester - 1);
-    std::cout << "Resizing semesters to: " << totalSemesters << std::endl;
     semesters.resize(totalSemesters);
-    std::cout << "Semesters size after resize: " << semesters.size() << std::endl;
 }
 
 std::string Student::GetStudentName() const { return itsStudentName; }
@@ -21,9 +19,7 @@ void Student::addCourse(int semesterIndex, const Course &course)
 {
     if (semesterIndex >= 0 && semesterIndex < semesters.size())
     {
-        std::cout << "Adding course to semester " << semesterIndex << std::endl;
         semesters[semesterIndex].push_back(course);
-        std::cout << "Number of courses in semester " << semesterIndex << ": " << semesters[semesterIndex].size() << std::endl;
     }
     else
     {
@@ -31,9 +27,7 @@ void Student::addCourse(int semesterIndex, const Course &course)
         if (semesterIndex >= semesters.size())
         {
             semesters.resize(semesterIndex + 1);
-            std::cout << "Resized semesters to accommodate index " << semesterIndex << ": " << semesters.size() << std::endl;
             semesters[semesterIndex].push_back(course);
-            std::cout << "Number of courses in semester " << semesterIndex << ": " << semesters[semesterIndex].size() << std::endl;
         }
     }
 }
