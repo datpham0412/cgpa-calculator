@@ -21,6 +21,7 @@ public:
     std::string GetStudentID() const;
     int GetCurrentYear() const;
     int GetCurrentSemester() const;
+    std::vector<std::vector<Course>> GetTotalSemesters() const;
     void addCourse(int semesterIndex, const Course &course);
     double calculateGPA(int semesterIndex) const;
     double calculateCGPA() const;

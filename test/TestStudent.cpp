@@ -27,6 +27,25 @@ void TestStudentGetterMethod()
     std::cout << "Test Student Getter Method Passed" << std::endl;
 }
 
+void TestGetTotalSemester()
+{
+    Student student1("Christiano Ronaldo", "1987515384", 5, 1);
+    Course course1("Energy and Motion", 79);
+    Course course2("Managing Software Projects", 85);
+    auto semesters = student1.GetTotalSemesters();
+    assert(semesters.size() == 8); // Initially no semester are founded
+    student1.addCourse(0, course1);
+    student1.addCourse(0, course2);
+    // Add courses and verify
+    semesters = student1.GetTotalSemesters();
+    assert(semesters.size() == 8);
+    assert(semesters[0].size() == 2);
+    assert(semesters[0][0].GetCourseName() == "Energy and Motion");
+    assert(semesters[0][1].GetCourseName() == "Managing Software Projects");
+
+    std::cout << "Test Get Total Semester Method passed" << std::endl;
+}
+
 // test add course method:
 void TestAddCourseMethod()
 {
@@ -66,6 +85,7 @@ int main()
 {
     TestStudentConstructor();
     TestStudentGetterMethod();
+    TestGetTotalSemester();
     TestAddCourseMethod();
     TestCalculateGPA();
     TestCalculateCGPA();

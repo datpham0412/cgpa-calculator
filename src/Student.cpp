@@ -1,22 +1,40 @@
 #include "Student.h"
 #include <stdexcept>
+#include <iostream>
 // Constructor:
 
-Student::Student(const std::string &studentName, const std::string &studentID, int currentYear, int currentSemester) : itsStudentName(studentName), itsStudentID(studentID), itsCurrentYear(currentYear), itsCurrentSemester(currentSemester)
+Student::Student(const std::string &studentName, const std::string &studentID, int currentYear, int currentSemester)
+    : itsStudentName(studentName), itsStudentID(studentID), itsCurrentYear(currentYear), itsCurrentSemester(currentSemester)
 {
     int totalSemesters = (currentYear - 1) * 2 + (currentSemester - 1);
+    std::cout << "Resizing semesters to: " << totalSemesters << std::endl;
     semesters.resize(totalSemesters);
+    std::cout << "Semesters size after resize: " << semesters.size() << std::endl;
 }
 
 std::string Student::GetStudentName() const { return itsStudentName; }
 std::string Student::GetStudentID() const { return itsStudentID; }
 int Student::GetCurrentYear() const { return itsCurrentYear; }
 int Student::GetCurrentSemester() const { return itsCurrentSemester; }
+std::vector<std::vector<Course>> Student::GetTotalSemesters() const { return semesters; }
 void Student::addCourse(int semesterIndex, const Course &course)
 {
     if (semesterIndex >= 0 && semesterIndex < semesters.size())
     {
+        std::cout << "Adding course to semester " << semesterIndex << std::endl;
         semesters[semesterIndex].push_back(course);
+        std::cout << "Number of courses in semester " << semesterIndex << ": " << semesters[semesterIndex].size() << std::endl;
+    }
+    else
+    {
+        std::cerr << "Invalid semester index: " << semesterIndex << std::endl;
+        if (semesterIndex >= semesters.size())
+        {
+            semesters.resize(semesterIndex + 1);
+            std::cout << "Resized semesters to accommodate index " << semesterIndex << ": " << semesters.size() << std::endl;
+            semesters[semesterIndex].push_back(course);
+            std::cout << "Number of courses in semester " << semesterIndex << ": " << semesters[semesterIndex].size() << std::endl;
+        }
     }
 }
 
