@@ -1,8 +1,8 @@
 103174539
-Pham Tien Dat
+Tien Dat Pham
 4
 2
-7
+8
 0
 0
 0
@@ -10,3 +10,12 @@ Pham Tien Dat
 0
 0
 0
+4
+Data Structure and Algorithms
+88
+Introduction to Algorithm
+95
+firewjfegferf
+55
+fremrerf
+1

@@ -17,28 +17,23 @@ int Student::GetCurrentSemester() const { return itsCurrentSemester; }
 std::vector<std::vector<Course>> Student::GetTotalSemesters() const { return semesters; }
 void Student::addCourse(int semesterIndex, const Course &course)
 {
-    if (semesterIndex >= 0 && semesterIndex < semesters.size())
+    if (semesterIndex >= 1 && semesterIndex <= semesters.size())
     {
-        semesters[semesterIndex].push_back(course);
+        semesters[semesterIndex - 1].push_back(course); // Adjust index to match 1-based indexing
     }
     else
     {
         std::cerr << "Invalid semester index: " << semesterIndex << std::endl;
-        if (semesterIndex >= semesters.size())
-        {
-            semesters.resize(semesterIndex + 1);
-            semesters[semesterIndex].push_back(course);
-        }
     }
 }
 
 double Student::calculateGPA(int semesterIndex) const
 {
-    if (semesterIndex >= 0 && semesterIndex < semesters.size())
+    if (semesterIndex >= 1 && semesterIndex <= semesters.size())
     {
         double totalPoints = 0;
         int totalUnits = 0;
-        for (const auto &course : semesters[semesterIndex])
+        for (const auto &course : semesters[semesterIndex - 1]) // Adjust index to match 1-based indexing
         {
             int gpaPoint = 0;
             if (course.GetItsGrades() > 80)
@@ -64,8 +59,8 @@ double Student::calculateGPA(int semesterIndex) const
 double Student::calculateCGPA() const
 {
     int totalSemester = semesters.size();
-    int totalGPA = 0;
-    for (int i = 0; i < semesters.size(); i++)
+    double totalGPA = 0;
+    for (int i = 1; i <= totalSemester; ++i)
     {
         try
         {
