@@ -111,7 +111,8 @@ void testSaveToFile()
     std::cout << "testSaveToFile passed!" << std::endl;
 }
 
-void testLoadFromFile() {
+void testLoadFromFile()
+{
     std::vector<Student> students;
 
     // Load from file
