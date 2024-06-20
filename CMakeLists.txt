@@ -19,12 +19,45 @@ include_directories(src)
 add_executable(CGPA_Calculator_Main
     src/main.cpp
     src/Course.cpp
-    src/FileManager.cpp
     src/Student.cpp
 )
 
 # Link SQLiteCpp to your target
 target_link_libraries(CGPA_Calculator_Main PRIVATE SQLiteCpp)
+
+# Add the test executables
+# add_executable(TestMain
+#     test/TestMain.cpp
+#     src/Course.cpp
+#     src/FileManager.cpp
+#     src/Student.cpp
+# )
+# add_executable(TestCourse
+#     test/TestCourse.cpp
+#     src/Course.cpp
+#     src/FileManager.cpp
+#     src/Student.cpp
+# )
+
+# add_executable(TestFileManager
+#     test/TestFileManager.cpp
+#     src/Course.cpp
+#     src/FileManager.cpp
+#     src/Student.cpp
+# )
+
+# add_executable(TestStudent
+#     test/TestStudent.cpp
+#     src/Course.cpp
+#     src/FileManager.cpp
+#     src/Student.cpp
+# )
+
+# Link SQLiteCpp to test targets
+# target_link_libraries(TestMain PRIVATE SQLiteCpp)
+# target_link_libraries(TestCourse PRIVATE SQLiteCpp)
+# target_link_libraries(TestFileManager PRIVATE SQLiteCpp)
+# target_link_libraries(TestStudent PRIVATE SQLiteCpp)
 
 # Set necessary policies
 if (POLICY CMP0079)

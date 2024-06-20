@@ -1,8 +1,14 @@
 #include "Student.h"
 #include <stdexcept>
 #include <iostream>
-// Constructor:
+// Default constructor
+Student::Student()
+    : itsStudentName(""), itsStudentID(""), itsCurrentYear(0), itsCurrentSemester(0)
+{
+    // No need to resize semesters since there are no semesters initially
+}
 
+// Parameterized constructor
 Student::Student(const std::string &studentName, const std::string &studentID, int currentYear, int currentSemester)
     : itsStudentName(studentName), itsStudentID(studentID), itsCurrentYear(currentYear), itsCurrentSemester(currentSemester)
 {
@@ -58,19 +64,77 @@ double Student::calculateGPA(int semesterIndex) const
 
 double Student::calculateCGPA() const
 {
-    int totalSemester = semesters.size();
+    int totalSemester = 0;
     double totalGPA = 0;
-    for (int i = 1; i <= totalSemester; ++i)
+    for (int i = 1; i <= semesters.size(); ++i)
     {
-        try
+        double gpa = calculateGPA(i);
+        if (gpa > 0)
         {
-            totalGPA += calculateGPA(i);
-        }
-        catch (const std::exception &e)
-        {
-            // Handle error
-            throw;
+            totalGPA += gpa;
+            totalSemester++;
         }
     }
-    return (totalSemester > 0) ? (totalGPA / totalSemester) : throw std::runtime_error("No semesters available");
+    if (totalSemester > 0)
+    {
+        return totalGPA / totalSemester;
+    }
+    else
+    {
+        throw std::runtime_error("No semesters available");
+    }
+}
+
+void Student::saveToDatabase(SQLite::Database &db) const
+{
+    SQLite::Statement query(db, "INSERT OR REPLACE INTO students (studentID, studentName, currentYear, currentSemester, CGPA) VALUES (?, ?, ?, ?, ?)");
+    query.bind(1, itsStudentID);
+    query.bind(2, itsStudentName);
+    query.bind(3, itsCurrentYear);
+    query.bind(4, itsCurrentSemester);
+    query.bind(5, calculateCGPA());
+    query.exec();
+    std::cout << "Saved Student: " << itsStudentName << ", " << itsStudentID << ", " << itsCurrentYear << ", " << itsCurrentSemester << ", " << calculateCGPA() << std::endl;
+
+    for (int semesterIndex = 1; semesterIndex <= semesters.size(); ++semesterIndex)
+    {
+        for (const auto &course : semesters[semesterIndex - 1])
+        {
+            SQLite::Statement courseQuery(db, "INSERT INTO courses (studentID, semesterIndex, courseName, grades) VALUES (?, ?, ?, ?)");
+            courseQuery.bind(1, itsStudentID);
+            courseQuery.bind(2, semesterIndex);
+            courseQuery.bind(3, course.GetCourseName());
+            courseQuery.bind(4, course.GetItsGrades());
+            courseQuery.exec();
+            std::cout << "Saved Course: " << course.GetCourseName() << ", Semester: " << semesterIndex << ", Grade: " << course.GetItsGrades() << std::endl;
+        }
+    }
+}
+void Student::loadFromDatabase(SQLite::Database &db, const std::string &studentID)
+{
+    itsStudentID = studentID; // Add this line to set the student ID
+
+    SQLite::Statement query(db, "SELECT studentName, currentYear, currentSemester FROM students WHERE studentID = ?");
+    query.bind(1, studentID);
+    if (query.executeStep())
+    {
+        itsStudentName = query.getColumn(0).getText();
+        itsCurrentYear = query.getColumn(1).getInt();
+        itsCurrentSemester = query.getColumn(2).getInt();
+        std::cout << "Loaded Student: " << itsStudentName << ", " << studentID << ", " << itsCurrentYear << ", " << itsCurrentSemester << std::endl;
+
+        int totalSemesters = (itsCurrentYear - 1) * 2 + (itsCurrentSemester - 1);
+        semesters.resize(totalSemesters);
+
+        SQLite::Statement courseQuery(db, "SELECT semesterIndex, courseName, grades FROM courses WHERE studentID = ?");
+        courseQuery.bind(1, studentID);
+        while (courseQuery.executeStep())
+        {
+            int semesterIndex = courseQuery.getColumn(0).getInt();
+            std::string courseName = courseQuery.getColumn(1).getText();
+            int grades = courseQuery.getColumn(2).getInt();
+            addCourse(semesterIndex, Course(courseName, grades));
+            std::cout << "Loaded Course: " << courseName << ", Semester: " << semesterIndex << ", Grade: " << grades << std::endl;
+        }
+    }
 }

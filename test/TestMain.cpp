@@ -1,123 +1,61 @@
 #include <iostream>
-#include <cassert>
-#include <vector>
-#include <algorithm>
-#include "../src/FileManager.h"
-#include "../src/Course.h"
-#include "../src/Student.h"
-
-// Function prototype
-void testAddStudent();
-void testAddCourseToStudent();
-void promptAddStudent(std::vector<Student> &students);
-void promptAddCourseToStudent(std::vector<Student> &students);
+#include <SQLiteCpp/SQLiteCpp.h>
+#include "Student.h"
+#include "Course.h"
 
 int main()
 {
-    testAddStudent();
-    testAddCourseToStudent();
-    std::cout << "All test passed" << std::endl;
+    try
+    {
+        SQLite::Database db("test_student.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+        std::cout << "SQLite database opened successfully!" << std::endl;
+
+        // Create tables
+        db.exec("CREATE TABLE IF NOT EXISTS students ("
+                "studentID TEXT PRIMARY KEY, "
+                "studentName TEXT, "
+                "currentYear INTEGER, "
+                "currentSemester INTEGER, "
+                "CGPA REAL)");
+
+        db.exec("CREATE TABLE IF NOT EXISTS courses ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "studentID TEXT, "
+                "semesterIndex INTEGER, "
+                "courseName TEXT, "
+                "grades INTEGER, "
+                "FOREIGN KEY(studentID) REFERENCES students(studentID))");
+
+        // Create a Student object
+        Student student("John Doe", "12345", 3, 1);
+
+        // Add courses to the student
+        student.addCourse(1, Course("Math", 85));
+        student.addCourse(1, Course("History", 78));
+        student.addCourse(2, Course("Physics", 90));
+        student.addCourse(2, Course("Chemistry", 75));
+
+        // Save the student to the database
+        student.saveToDatabase(db);
+        std::cout << "Student saved to database successfully!" << std::endl;
+
+        // Load the student from the database
+        Student loadedStudent; // Use the default constructor
+        loadedStudent.loadFromDatabase(db, "12345");
+        std::cout << "Student loaded from database successfully!" << std::endl;
+
+        // Print student details
+        std::cout << "Student Name: " << loadedStudent.GetStudentName() << std::endl;
+        std::cout << "Student ID: " << loadedStudent.GetStudentID() << std::endl;
+        std::cout << "Current Year: " << loadedStudent.GetCurrentYear() << std::endl;
+        std::cout << "Current Semester: " << loadedStudent.GetCurrentSemester() << std::endl;
+        std::cout << "CGPA: " << loadedStudent.calculateCGPA() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Exception: " << e.what() << std::endl;
+        return 1;
+    }
+
     return 0;
-}
-
-void testAddStudent()
-{
-    std::vector<Student> students;
-    // Prompt user for student details
-    promptAddStudent(students);
-    // Save to file to simulate the addStudent function behavior
-    FileManager::saveToFile(students);
-    // Clear the vector and load from file to ensure persistance
-    students.clear();
-    FileManager::loadFromFile(students);
-
-    // verify the student was added and loaded correctly
-    assert(students.size() == 1);
-    const Student &student = students[0];
-
-    // Assuming that the Student ID and name were entered correctly in the prompt
-    std::cout << "Verifying student details..." << std::endl;
-    std::cout << "Student ID: " << student.GetStudentID() << std::endl;
-    std::cout << "Student Name: " << student.GetStudentName() << std::endl;
-    std::cout << "Current Year: " << student.GetCurrentYear() << std::endl;
-    std::cout << "Current Semester: " << student.GetCurrentSemester() << std::endl;
-
-    std::cout << "testAddStudent method passed !!!" << std::endl;
-}
-
-void testAddCourseToStudent()
-{
-    std::vector<Student> students;
-
-    // Load existing students from the file
-    FileManager::loadFromFile(students);
-
-    // Prompt user to add courses to a student
-    promptAddCourseToStudent(students);
-
-    // Save the updated student data to the file
-    FileManager::saveToFile(students);
-
-    // Clear the vector and load from file to ensure persistence
-    students.clear();
-    FileManager::loadFromFile(students);
-
-    // Verify that courses were added correctly
-    assert(!students.empty());
-    const Student &student = students[0]; // Assuming we test with the first student
-    auto semesters = student.GetTotalSemesters();
-    assert(!semesters.empty());
-    assert(semesters[0].size() > 0); // Ensure that courses were added
-
-    std::cout << "testAddCourseToStudent passed." << std::endl;
-}
-
-void promptAddStudent(std::vector<Student> &students)
-{
-    std::string studentID, studentName;
-    int currentYear, currentSemester;
-    std::cout << "\nEnter student ID: \n> ";
-    std::cin >> studentID;
-    std::cout << "\nEnter student name: \n> ";
-    std::cin.ignore(); // Ignore the newline character in the input buffer.
-    std::getline(std::cin, studentName);
-    std::cout << "\nEnter current year: \n> ";
-    std::cin >> currentYear;
-    std::cout << "\nEnter current semester (1 or 2): \n> ";
-    std::cin >> currentSemester;
-    students.push_back(Student(studentName, studentID, currentYear, currentSemester));
-    std::cout << "Student added successfully!!! \n";
-}
-
-void promptAddCourseToStudent(std::vector<Student> &students)
-{
-    std::string id;
-    std::cout << "Enter Student ID: ";
-    std::cin >> id;
-    auto it = std::find_if(students.begin(), students.end(), [&](const Student &s)
-                           { return s.GetStudentID() == id; });
-    if (it != students.end())
-    {
-        int semesterIndex = (it->GetCurrentYear() - 1) * 2 + (it->GetCurrentSemester() - 1);
-        int numUnits;
-        std::cout << "Enter number of units for semester " << it->GetCurrentSemester() << " - year " << it->GetCurrentYear() << ": ";
-        std::cin >> numUnits;
-        std::cin.ignore(); // Ignore the newline character in the input buffer.
-        for (int i = 0; i < numUnits; ++i)
-        {
-            std::string courseName;
-            int creditHours, grade;
-            std::cout << "Enter course name: ";
-            std::getline(std::cin, courseName);
-            std::cout << "Enter grade: ";
-            std::cin >> grade;
-            it->addCourse(semesterIndex, Course(courseName, grade));
-            std::cin.ignore(); // Ignore the newline character in the input buffer for the next course
-        }
-        FileManager::saveToFile(students); // Save to file after adding courses
-    }
-    else
-    {
-        std::cout << "Student not found.\n";
-    }
 }
