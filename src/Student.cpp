@@ -1,4 +1,4 @@
-#include "Student.h"
+#include "../include/Student.h"
 #include <stdexcept>
 #include <iostream>
 // Default constructor
@@ -137,4 +137,11 @@ void Student::loadFromDatabase(SQLite::Database &db, const std::string &studentI
             std::cout << "Loaded Course: " << courseName << ", Semester: " << semesterIndex << ", Grade: " << grades << std::endl;
         }
     }
+}
+
+std::vector<Course> Student::GetCoursesForSemester(int semesterIndex) const {
+    if (semesterIndex >= 1 && semesterIndex <= semesters.size()) {
+        return semesters[semesterIndex - 1];
+    }
+    return {};
 }

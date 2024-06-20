@@ -20,6 +20,9 @@ add_executable(CGPA_Calculator_Main
     src/main.cpp
     src/Course.cpp
     src/Student.cpp
+    src/Database.cpp
+    src/Menu.cpp
+    src/StudentOperations.cpp
 )
 
 # Link SQLiteCpp to your target
