@@ -1,0 +1,48 @@
+# Ignore build directories
+/build/
+/external/SQLiteCpp/build/
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ignore Visual Studio Code files
+.vscode/
+
+# Ignore compiled object files and libraries
+*.o
+*.obj
+*.lib
+*.a
+*.so
+*.dll
+*.exe
+
+# Ignore logs and databases
+*.log
+*.db
+
+# Ignore personal or system-specific files
+*.swp
+*.bak
+*.tmp
+*.DS_Store
+Thumbs.db
+
+# Ignore dependency directories
+/node_modules/
+/vendor/
+
+# Ignore Python virtual environment
+/venv/
+/__pycache__/
+
+# Ignore IDE project files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.user
+*.VC.db
