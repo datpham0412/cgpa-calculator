@@ -1,5 +1,11 @@
 # 🎓 CGPA Calculator (Cumulative Grade Point Average Calculator)
 
+[![Build Status](https://img.shields.io/github/workflow/status/datpham0412/CGPA_Calculator/CI)](https://github.com/datpham0412/CGPA_Calculator/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/datpham0412/CGPA_Calculator/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/datpham0412/CGPA_Calculator)](https://github.com/datpham0412/CGPA_Calculator/issues)
+[![GitHub stars](https://img.shields.io/github/stars/datpham0412/CGPA_Calculator)](https://github.com/datpham0412/CGPA_Calculator/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/datpham0412/CGPA_Calculator)](https://github.com/datpham0412/CGPA_Calculator/network/members)
+
 ## 📋 Project Description
 The **CGPA Calculator** is a terminal-based application that allows students to manage and calculate their Cumulative Grade Point Average (CGPA). Students can input their personal details, course units, and grades, and the application will compute the GPA for each semester and the overall CGPA.
 
