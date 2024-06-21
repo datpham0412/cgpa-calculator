@@ -68,10 +68,10 @@ The **CGPA Calculator** is a terminal-based application that allows students to 
 ![Screenshot 2024-06-21 111245](https://github.com/datpham0412/CGPA_Calculator/assets/100574389/c9de7ff3-2079-449d-b9fc-4c13c36a75f5)
 
 ## 📜 License
-This project is licensed under the MIT License - see the [LICENSE]([LICENSE](https://github.com/datpham0412/CGPA_Calculator/blob/main/LICENSE)) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/datpham0412/CGPA_Calculator/blob/main/LICENSE) file for details.
 
 ## 📞 Contact
-For any inquiries, please contact [yourname@example.com](mailto:tiendat041202@gmail.com).
+For any inquiries, please contact [tiendat041202@gmail.com](mailto:tiendat041202@gmail.com).
 
 ---
 
