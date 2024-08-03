@@ -15,6 +15,7 @@ The **CGPA Calculator** is a terminal-based application that allows students to 
 - **CMake**: Cross-platform build system.
 - **Google Test**: Unit testing framework.
 
+
 ## 📚 Features
 - Add student details: Name, Student ID, Current Year, and Current Semester.
 - Add course units and grades for each semester.
